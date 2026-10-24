@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniMe — Minimalist Baby & Family Comfort Wear</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            warmWhite: '#FAF8F5',
+                            beige: '#F3EFEA',
+                            sand: '#E6DFD5',
+                            pink: '#F8ECEE',
+                            sage: '#E3EAE3',
+                            sageDark: '#5B705B',
+                            brown: '#8C6D58',
+                            brownDark: '#544133',
+                            charcoal: '#2C2A29',
+                            muted: '#78716C'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FAF8F5;
+            color: #2C2A29;
+            overflow-x: hidden;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF8F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E6DFD5;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8C6D58;
+        }
+
+        /* Glassmorphism & Soft Effects */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        
+        .product-card {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(140, 109, 88, 0.15);
+        }
+
+        /* Hide Scrollbars in Horizontal Swipe */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Print Invoice Styling */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printableInvoice, #printableInvoice * {
+                visibility: visible;
+            }
+            #printableInvoice {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white !important;
+                color: black !important;
+                padding: 20px;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-sage selection:text-brand-sageDark">
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="bg-brand-brown text-white text-xs font-medium py-2 px-4 text-center tracking-wide">
+        ✨ Pure Organic Comfort for Every Age • Free Standard Shipping across India on orders over ₹999 | Code: <span class="underline font-semibold">MINI10</span>
+    </div>
+
+    <!-- MAIN NAVIGATION BAR -->
+    <header class="sticky top-0 z-30 glass-panel border-b border-brand-sand/40 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Left: Logo & Mobile Toggle -->
+                <div class="flex items-center gap-4">
+                    <button id="mobileMenuBtn" class="md:hidden text-brand-charcoal hover:text-brand-brown p-2" aria-label="Toggle Navigation Menu">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    
+                    <a href="#" class="flex items-center gap-2 group">
+                        <span class="w-9 h-9 rounded-full bg-brand-pink flex items-center justify-center text-brand-brown font-bold text-lg shadow-sm group-hover:scale-105 transition-transform">m</span>
+                        <div class="flex flex-col">
+                            <span class="text-2xl font-bold tracking-tight text-brand-charcoal font-sans">MiniMe</span>
+                            <span class="text-[10px] tracking-widest text-brand-muted uppercase font-medium -mt-1">Comfort Wear</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Middle: Nav Category Links -->
+                <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-brand-charcoal">
+                    <a href="#catalog" onclick="filterByAge('all')" class="hover:text-brand-brown transition-colors">All Collections</a>
+                    <a href="#catalog" onclick="filterByAge('baby')" class="hover:text-brand-brown transition-colors">Baby (0-3Y)</a>
+                    <a href="#catalog" onclick="filterByAge('19')" class="hover:text-brand-brown transition-colors">Youth (Age 19)</a>
+                    <a href="#catalog" onclick="filterByAge('22')" class="hover:text-brand-brown transition-colors">Adult (Age 22)</a>
+                    <a href="#catalog" onclick="filterByAge('58')" class="hover:text-brand-brown transition-colors">Senior Comfort (58+)</a>
+                    <a href="#fabrics" class="hover:text-brand-brown transition-colors">Fabric Guide</a>
+                </nav>
+
+                <!-- Right: Actions (AI, Search, Wishlist, Cart) -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    
+                    <!-- AI Assistant Trigger -->
+                    <button onclick="toggleAiModal(true)" class="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-brand-sage/60 hover:bg-brand-sage text-brand-sageDark font-semibold text-xs sm:text-sm rounded-full transition-all shadow-sm hover:shadow">
+                        <i class="fa-solid fa-wand-magic-sparkles text-brand-sageDark"></i>
+                        <span class="hidden sm:inline">AI Shopping Helper</span>
+                    </button>
+
+                    <!-- Search Trigger -->
+                    <button onclick="focusSearch()" class="p-2 sm:p-2.5 rounded-full hover:bg-brand-beige text-brand-charcoal transition-colors" title="Search products">
+                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    </button>
+
+                    <!-- Wishlist Button -->
+                    <button onclick="toggleWishlistModal(true)" class="relative p-2 sm:p-2.5 rounded-full hover:bg-brand-beige text-brand-charcoal transition-colors" title="Wishlist">
+                        <i class="fa-regular fa-heart text-lg"></i>
+                        <span id="wishlistBadge" class="hidden absolute top-1 right-1 bg-brand-brown text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                    </button>
+
+                    <!-- Cart Drawer Trigger -->
+                    <button onclick="toggleCartDrawer(true)" class="relative p-2 sm:p-2.5 rounded-full bg-brand-beige hover:bg-brand-sand text-brand-charcoal transition-colors" title="Shopping Cart">
+                        <i class="fa-solid fa-bag-shopping text-lg"></i>
+                        <span id="cartBadge" class="absolute -top-1 -right-1 bg-brand-brown text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow">0</span>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-brand-sand/50 bg-brand-warmWhite px-4 py-4 space-y-3">
+            <a href="#catalog" onclick="filterByAge('all'); toggleMobileMenu();" class="block text-sm font-medium text-brand-charcoal hover:text-brand-brown py-1">All Collections</a>
+            <a href="#catalog" onclick="filterByAge('baby'); toggleMobileMenu();" class="block text-sm font-medium text-brand-charcoal hover:text-brand-brown py-1">Baby & Kids (0-3 Years)</a>
+            <a href="#catalog" onclick="filterByAge('19'); toggleMobileMenu();" class="block text-sm font-medium text-brand-charcoal hover:text-brand-brown py-1">Youth Lounge (Age 19)</a>
+            <a href="#catalog" onclick="filterByAge('22'); toggleMobileMenu();" class="block text-sm font-medium text-brand-charcoal hover:text-brand-brown py-1">Adult Minimalist (Age 22)</a>
+            <a href="#catalog" onclick="filterByAge('58'); toggleMobileMenu();" class="block text-sm font-medium text-brand-charcoal hover:text-brand-brown py-1">Senior Gentle Touch (Age 58+)</a>
+            <a href="#fabrics" onclick="toggleMobileMenu()" class="block text-sm font-medium text-brand-charcoal hover:text-brand-brown py-1">Fabric & Care Guide</a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- HERO SECTION -->
+        <section class="relative bg-gradient-to-b from-brand-pink/30 via-brand-warmWhite to-brand-warmWhite py-12 lg:py-20 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Hero Content -->
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        <span class="inline-block px-3.5 py-1.5 bg-brand-sand/40 border border-brand-sand text-brand-brown text-xs font-semibold uppercase tracking-wider rounded-full">
+                            🌱 Pure 100% Breathable Fabrics
+                        </span>
+                        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-brand-charcoal leading-[1.15]">
+                            Little Clothes, Big Comfort <br class="hidden sm:inline">& Timeless Family Wear.
+                        </h1>
+                        <p class="text-base sm:text-lg text-brand-muted max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                            Thoughtfully crafted garments made from ultra-soft organic cotton, hypoallergenic muslin, and soothing bamboo. Gentle on sensitive skin, designed for every stage of life — from newborns to age 58+.
+                        </p>
+                        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                            <a href="#catalog" class="px-8 py-3.5 bg-brand-brown hover:bg-brand-brownDark text-white font-medium text-sm rounded-full transition-all shadow-md hover:shadow-lg">
+                                Explore Collection
+                            </a>
+                            <button onclick="toggleAiModal(true)" class="px-7 py-3.5 bg-white border border-brand-sand hover:bg-brand-beige text-brand-charcoal font-medium text-sm rounded-full transition-all flex items-center gap-2 shadow-sm">
+                                <i class="fa-solid fa-wand-magic-sparkles text-brand-sageDark"></i> Try AI Assistant
+                            </button>
+                        </div>
+
+                        <!-- Stats/Trust badges -->
+                        <div class="pt-8 grid grid-cols-3 gap-4 border-t border-brand-sand/60 max-w-lg mx-auto lg:mx-0">
+                            <div>
+                                <p class="text-2xl font-bold text-brand-charcoal">100%</p>
+                                <p class="text-xs text-brand-muted font-medium">Safe Fabrics</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-brand-charcoal">₹0</p>
+                                <p class="text-xs text-brand-muted font-medium">Ship over ₹999</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-brand-charcoal">4.9★</p>
+                                <p class="text-xs text-brand-muted font-medium">Customer Care</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Hero Gallery Card Stack -->
+                    <div class="lg:col-span-5 relative">
+                        <div class="relative mx-auto max-w-sm lg:max-w-none">
+                            <div class="bg-white p-4 rounded-3xl shadow-xl border border-brand-sand/50 transform rotate-1 transition-transform hover:rotate-0">
+                                <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80" alt="Soft Organic Baby Outfit" class="w-full h-80 object-cover rounded-2xl">
+                                <div class="mt-4 flex items-center justify-between">
+                                    <div>
+                                        <p class="font-bold text-sm text-brand-charcoal">Organic Muslin Lounge Set</p>
+                                        <p class="text-xs text-brand-muted">Ultra-light • Hypoallergenic</p>
+                                    </div>
+                                    <span class="text-brand-brown font-bold text-sm">₹1,199</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Floating Tag Badge -->
+                            <div class="absolute -bottom-6 -left-6 bg-brand-sage text-brand-sageDark px-4 py-3 rounded-2xl shadow-lg border border-white flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center font-bold text-sm">🌿</div>
+                                <div>
+                                    <p class="text-xs font-bold">Tested Softness</p>
+                                    <p class="text-[10px] opacity-80">Ideal for sensitive skin</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- QUICK AGE CATEGORY NAV CARDS -->
+        <section class="py-10 bg-brand-warmWhite border-y border-brand-sand/30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-bold text-brand-charcoal tracking-tight">Shop by Age & Stage</h2>
+                    <span class="text-xs text-brand-muted">Select an age group to filter</span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <button onclick="filterByAge('baby')" class="p-4 bg-white rounded-2xl border border-brand-sand/60 hover:border-brand-brown transition-all text-center group shadow-sm">
+                        <div class="w-12 h-12 mx-auto rounded-full bg-brand-pink flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition-transform">🍼</div>
+                        <p class="font-bold text-xs text-brand-charcoal">Baby & Toddler</p>
+                        <p class="text-[11px] text-brand-muted">0 - 3 Years</p>
+                    </button>
+
+                    <button onclick="filterByAge('19')" class="p-4 bg-white rounded-2xl border border-brand-sand/60 hover:border-brand-brown transition-all text-center group shadow-sm">
+                        <div class="w-12 h-12 mx-auto rounded-full bg-brand-sage flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition-transform">🎒</div>
+                        <p class="font-bold text-xs text-brand-charcoal">Youth & Students</p>
+                        <p class="text-[11px] text-brand-muted">Age 19</p>
+                    </button>
+
+                    <button onclick="filterByAge('22')" class="p-4 bg-white rounded-2xl border border-brand-sand/60 hover:border-brand-brown transition-all text-center group shadow-sm">
+                        <div class="w-12 h-12 mx-auto rounded-full bg-brand-beige flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition-transform">☕</div>
+                        <p class="font-bold text-xs text-brand-charcoal">Young Adult</p>
+                        <p class="text-[11px] text-brand-muted">Age 22</p>
+                    </button>
+
+                    <button onclick="filterByAge('58')" class="p-4 bg-white rounded-2xl border border-brand-sand/60 hover:border-brand-brown transition-all text-center group shadow-sm">
+                        <div class="w-12 h-12 mx-auto rounded-full bg-brand-sand/50 flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition-transform">🏡</div>
+                        <p class="font-bold text-xs text-brand-charcoal">Senior Easy Fit</p>
+                        <p class="text-[11px] text-brand-muted">Age 58+</p>
+                    </button>
+
+                    <button onclick="filterByAge('all')" class="p-4 bg-brand-beige/50 rounded-2xl border border-brand-sand hover:border-brand-brown transition-all text-center group shadow-sm col-span-2 sm:col-span-1">
+                        <div class="w-12 h-12 mx-auto rounded-full bg-white flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition-transform">✨</div>
+                        <p class="font-bold text-xs text-brand-charcoal">View All Items</p>
+                        <p class="text-[11px] text-brand-muted">Entire Catalog</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAIN CATALOG SECTION WITH SEARCH AND MULTI-FILTER SIDEBAR -->
+        <section id="catalog" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header & Search Bar -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 border-b border-brand-sand/50 pb-6">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-brand-charcoal tracking-tight">Our Curated Catalog</h2>
+                    <p class="text-xs sm:text-sm text-brand-muted mt-1">Breathable, skin-friendly attire crafted for every stage of life.</p>
+                </div>
+
+                <!-- Live Search Bar -->
+                <div class="w-full md:w-80 relative">
+                    <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Search muslin, rompers, linen..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-brand-sand rounded-full text-sm text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-brown/40 transition-all shadow-sm">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-brand-muted text-sm"></i>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                
+                <!-- SIDEBAR FILTERS -->
+                <aside class="space-y-6 lg:col-span-1 bg-white p-6 rounded-3xl border border-brand-sand/60 h-fit shadow-sm">
+                    <div class="flex items-center justify-between border-b border-brand-sand/50 pb-4">
+                        <h3 class="font-bold text-sm text-brand-charcoal flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-brand-brown"></i> Filters
+                        </h3>
+                        <button onclick="resetFilters()" class="text-xs font-semibold text-brand-brown hover:underline">Reset All</button>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-brand-charcoal uppercase tracking-wider">Garment Category</label>
+                        <select id="categoryFilter" onchange="applyFilters()" class="w-full p-2.5 bg-brand-warmWhite border border-brand-sand rounded-xl text-xs text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-brown">
+                            <option value="all">All Categories</option>
+                            <option value="romper">Rompers & Bodysuits</option>
+                            <option value="tops">T-Shirts & Tops</option>
+                            <option value="pajama">Sleepwear & Pajamas</option>
+                            <option value="sets">Matching Linen Sets</option>
+                            <option value="blanket">Swaddles & Accessories</option>
+                        </select>
+                    </div>
+
+                    <!-- Age / Target Fit Filter -->
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-brand-charcoal uppercase tracking-wider">Age Group / Target Fit</label>
+                        <select id="ageFilter" onchange="applyFilters()" class="w-full p-2.5 bg-brand-warmWhite border border-brand-sand rounded-xl text-xs text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-brown">
+                            <option value="all">All Ages</option>
+                            <option value="0-3m">Newborn (0-3 Months)</option>
+                            <option value="3-12m">Baby (3-12 Months)</option>
+                            <option value="1-3y">Toddler (1-3 Years)</option>
+                            <option value="19">Youth / Student (Age 19)</option>
+                            <option value="22">Young Adult (Age 22)</option>
+                            <option value="58">Senior Comfort (Age 58+)</option>
+                        </select>
+                    </div>
+
+                    <!-- Fabric Material Filter -->
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-brand-charcoal uppercase tracking-wider">Fabric Type</label>
+                        <select id="materialFilter" onchange="applyFilters()" class="w-full p-2.5 bg-brand-warmWhite border border-brand-sand rounded-xl text-xs text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-brown">
+                            <option value="all">All Materials</option>
+                            <option value="Organic Cotton">Organic Cotton</option>
+                            <option value="Muslin">Hypoallergenic Muslin</option>
+                            <option value="Linen">Breathable Linen</option>
+                            <option value="Bamboo Viscose">Bamboo Viscose</option>
+                            <option value="Cotton Blend">Soft Cotton Blend</option>
+                        </select>
+                    </div>
+
+                    <!-- Price Slider Filter -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-bold text-brand-charcoal uppercase tracking-wider">Max Price</label>
+                            <span id="priceDisplay" class="text-xs font-bold text-brand-brown">₹3,500</span>
+                        </div>
+                        <input type="range" id="priceFilter" min="400" max="3500" step="100" value="3500" oninput="applyFilters()" class="w-full accent-brand-brown cursor-pointer">
+                        <div class="flex justify-between text-[10px] text-brand-muted">
+                            <span>₹400</span>
+                            <span>₹3,500</span>
+                        </div>
+                    </div>
+
+                    <!-- Sort Order -->
+                    <div class="space-y-2 pt-2 border-t border-brand-sand/50">
+                        <label class="text-xs font-bold text-brand-charcoal uppercase tracking-wider">Sort By</label>
+                        <select id="sortOrder" onchange="applyFilters()" class="w-full p-2.5 bg-brand-warmWhite border border-brand-sand rounded-xl text-xs text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-brown">
+                            <option value="featured">Featured First</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="rating">Highest Rated</option>
+                        </select>
+                    </div>
+                </aside>
+
+                <!-- DYNAMIC PRODUCT GRID -->
+                <main class="lg:col-span-3">
+                    <!-- Products Found Header -->
+                    <div class="flex justify-between items-center mb-4">
+                        <span id="productCount" class="text-xs font-semibold text-brand-muted uppercase tracking-wider">Showing 0 products</span>
+                    </div>
+
+                    <!-- Grid Container -->
+                    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        <!-- Rendered dynamically via JS -->
+                    </div>
+
+                    <!-- Empty State Container -->
+                    <div id="emptyState" class="hidden py-16 text-center space-y-4 bg-white rounded-3xl border border-brand-sand/60">
+                        <div class="w-16 h-16 mx-auto bg-brand-pink rounded-full flex items-center justify-center text-2xl text-brand-brown">🔍</div>
+                        <h4 class="text-base font-bold text-brand-charcoal">No matching products found</h4>
+                        <p class="text-xs text-brand-muted max-w-sm mx-auto">Try adjusting your age filters, price range, or material preferences to discover more items.</p>
+                        <button onclick="resetFilters()" class="px-5 py-2 bg-brand-brown text-white text-xs font-medium rounded-full shadow hover:bg-brand-brownDark">
+                            Clear Filters
+                        </button>
+                    </div>
+                </main>
+            </div>
+        </section>
+
+        <!-- FABRIC & CARE INFORMATION SECTION -->
+        <section id="fabrics" class="py-16 bg-brand-beige/40 border-y border-brand-sand/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-brown">Thoughtfully Sourced</span>
+                    <h2 class="text-2xl sm:text-4xl font-bold text-brand-charcoal tracking-tight mt-1">Fabric & Material Guide</h2>
+                    <p class="text-xs sm:text-sm text-brand-muted mt-2">Every fabric chosen by MiniMe is crafted for supreme softness, airiness, and skin comfort across all age groups.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Card 1 -->
+                    <div class="bg-white p-6 rounded-3xl border border-brand-sand/60 shadow-sm space-y-3">
+                        <div class="w-10 h-10 rounded-2xl bg-brand-pink flex items-center justify-center text-lg">🌸</div>
+                        <h3 class="font-bold text-base text-brand-charcoal">Organic Cotton</h3>
+                        <p class="text-xs text-brand-muted leading-relaxed">Pest-free and chemical-free raw cotton harvested for maximum softness. Extra safe for newborn skin and everyday sensitive adult loungewear.</p>
+                        <div class="pt-2 text-[11px] text-brand-brown font-semibold">Care: Gentle machine wash with mild detergent</div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-white p-6 rounded-3xl border border-brand-sand/60 shadow-sm space-y-3">
+                        <div class="w-10 h-10 rounded-2xl bg-brand-sage flex items-center justify-center text-lg">🌾</div>
+                        <h3 class="font-bold text-base text-brand-charcoal">Pure Muslin</h3>
+                        <p class="text-xs text-brand-muted leading-relaxed">Finely woven open-weave cotton that becomes softer with every wash. Highly breathable and helps regulate temperature naturally.</p>
+                        <div class="pt-2 text-[11px] text-brand-brown font-semibold">Care: Air dry or tumble dry low; do not bleach</div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-white p-6 rounded-3xl border border-brand-sand/60 shadow-sm space-y-3">
+                        <div class="w-10 h-10 rounded-2xl bg-brand-sand flex items-center justify-center text-lg">🍃</div>
+                        <h3 class="font-bold text-base text-brand-charcoal">Bamboo Viscose</h3>
+                        <p class="text-xs text-brand-muted leading-relaxed">Silky-smooth moisture-wicking material with natural antibacterial qualities. Perfect for summer sleepwear and senior comfort sets.</p>
+                        <div class="pt-2 text-[11px] text-brand-brown font-semibold">Care: Wash cold, lay flat to dry to preserve texture</div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="bg-white p-6 rounded-3xl border border-brand-sand/60 shadow-sm space-y-3">
+                        <div class="w-10 h-10 rounded-2xl bg-brand-beige flex items-center justify-center text-lg">☀️</div>
+                        <h3 class="font-bold text-base text-brand-charcoal">Breathable Linen</h3>
+                        <p class="text-xs text-brand-muted leading-relaxed">Lightweight natural fiber providing maximum airflow. Ideal for outdoor toddler play and relaxed youth lounge outfits.</p>
+                        <div class="pt-2 text-[11px] text-brand-brown font-semibold">Care: Cool iron while slightly damp for best look</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS & TRUST -->
+        <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-xl mx-auto mb-10">
+                <h2 class="text-2xl font-bold text-brand-charcoal">Loved by Families across India</h2>
+                <p class="text-xs text-brand-muted mt-1">Real feedback from parents, young adults, and grandparents.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 bg-white rounded-3xl border border-brand-sand/50 shadow-sm space-y-3">
+                    <div class="text-amber-400 text-xs">★★★★★</div>
+                    <p class="text-xs text-brand-charcoal italic">"The muslin rompers for my 4-month-old are ridiculously soft! Also picked up the bamboo shirt for myself (Age 22) and the quality is outstanding."</p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <div class="w-8 h-8 rounded-full bg-brand-pink text-xs font-bold flex items-center justify-center text-brand-brown">P</div>
+                        <div>
+                            <p class="text-xs font-bold text-brand-charcoal">Pooja Sharma</p>
+                            <p class="text-[10px] text-brand-muted">Verified Buyer • Mumbai</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-white rounded-3xl border border-brand-sand/50 shadow-sm space-y-3">
+                    <div class="text-amber-400 text-xs">★★★★★</div>
+                    <p class="text-xs text-brand-charcoal italic">"Finding non-irritating loose linen sets for my mother (58+) was always difficult until we found MiniMe. Unbelievable comfort."</p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <div class="w-8 h-8 rounded-full bg-brand-sage text-xs font-bold flex items-center justify-center text-brand-brown">R</div>
+                        <div>
+                            <p class="text-xs font-bold text-brand-charcoal">Rohan Verma</p>
+                            <p class="text-[10px] text-brand-muted">Verified Buyer • Bengaluru</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-white rounded-3xl border border-brand-sand/50 shadow-sm space-y-3">
+                    <div class="text-amber-400 text-xs">★★★★★</div>
+                    <p class="text-xs text-brand-charcoal italic">"The AI shopping assistant helped me find a complete gift hamper set for my college friend (Age 19) in under two minutes!"</p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <div class="w-8 h-8 rounded-full bg-brand-beige text-xs font-bold flex items-center justify-center text-brand-brown">A</div>
+                        <div>
+                            <p class="text-xs font-bold text-brand-charcoal">Ananya Roy</p>
+                            <p class="text-[10px] text-brand-muted">Verified Buyer • New Delhi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEWSLETTER SECTION -->
+        <section class="py-12 bg-brand-pink/30 border-t border-brand-sand/50">
+            <div class="max-w-4xl mx-auto px-4 text-center space-y-4">
+                <span class="text-xs font-bold text-brand-brown uppercase tracking-wider">MiniMe Club</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-brand-charcoal">Get 10% Off Your First Order</h2>
+                <p class="text-xs sm:text-sm text-brand-muted">Subscribe for gentle fabric releases, seasonal discounts, and baby care tips.</p>
+                
+                <form onsubmit="subscribeNewsletter(event)" class="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto pt-2">
+                    <input type="email" required placeholder="Enter your email address..." class="px-4 py-3 rounded-full text-xs bg-white border border-brand-sand focus:outline-none focus:ring-2 focus:ring-brand-brown flex-grow">
+                    <button type="submit" class="px-6 py-3 bg-brand-brown hover:bg-brand-brownDark text-white text-xs font-semibold rounded-full transition-all shadow">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-charcoal text-white pt-12 pb-8 text-xs border-t border-brand-charcoal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 rounded-full bg-brand-pink flex items-center justify-center text-brand-brown font-bold text-sm">m</span>
+                    <span class="text-xl font-bold text-white tracking-tight">MiniMe</span>
+                </div>
+                <p class="text-stone-400 leading-relaxed text-[11px]">
+                    Minimalist, gentle-touch clothing designed for babies, teens (19), adults (22), and seniors (58+). Pure natural fabrics for daily ease.
+                </p>
+            </div>
+
+            <div class="space-y-2">
+                <h4 class="font-bold text-white uppercase text-[11px] tracking-wider mb-3">Shop Collections</h4>
+                <p><a href="#catalog" onclick="filterByAge('baby')" class="text-stone-400 hover:text-white transition-colors">Baby Essentials (0-3Y)</a></p>
+                <p><a href="#catalog" onclick="filterByAge('19')" class="text-stone-400 hover:text-white transition-colors">Youth & College Wear (19)</a></p>
+                <p><a href="#catalog" onclick="filterByAge('22')" class="text-stone-400 hover:text-white transition-colors">Young Adult Minimal (22)</a></p>
+                <p><a href="#catalog" onclick="filterByAge('58')" class="text-stone-400 hover:text-white transition-colors">Senior Comfort Loungewear (58+)</a></p>
+            </div>
+
+            <div class="space-y-2">
+                <h4 class="font-bold text-white uppercase text-[11px] tracking-wider mb-3">Customer Support</h4>
+                <p><a href="#" onclick="showToast('Help Center available 24/7 via Email'); return false;" class="text-stone-400 hover:text-white transition-colors">Shipping & Delivery Policy</a></p>
+                <p><a href="#" onclick="showToast('Returns are free within 15 days'); return false;" class="text-stone-400 hover:text-white transition-colors">Easy 15-Day Returns</a></p>
+                <p><a href="#fabrics" class="text-stone-400 hover:text-white transition-colors">Fabric Care Instructions</a></p>
+                <p><a href="#" onclick="showToast('Demo store - no real payments required'); return false;" class="text-stone-400 hover:text-white transition-colors">FAQs & Help Center</a></p>
+            </div>
+
+            <div class="space-y-3">
+                <h4 class="font-bold text-white uppercase text-[11px] tracking-wider mb-3">Contact Us</h4>
+                <p class="text-stone-400"><i class="fa-solid fa-envelope mr-2 text-brand-pink"></i> care@minime-store.in</p>
+                <p class="text-stone-400"><i class="fa-solid fa-phone mr-2 text-brand-pink"></i> +91 (800) 425-6464</p>
+                <p class="text-stone-400"><i class="fa-solid fa-location-dot mr-2 text-brand-pink"></i> Rajkot, Gujarat, India</p>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-stone-800 pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-stone-500 gap-4">
+            <p>© 2026 MiniMe E-Commerce Demo Inc. All rights reserved.</p>
+            <div class="flex gap-4">
+                <a href="#" class="hover:text-stone-300"><i class="fa-brands fa-instagram text-base"></i></a>
+                <a href="#" class="hover:text-stone-300"><i class="fa-brands fa-facebook text-base"></i></a>
+                <a href="#" class="hover:text-stone-300"><i class="fa-brands fa-pinterest text-base"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AI SHOPPING ASSISTANT MODAL -->
+    <div id="aiModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 space-y-4 shadow-2xl relative border border-brand-sand animate-fadeIn">
+            <!-- Modal Close Button -->
+            <button onclick="toggleAiModal(false)" class="absolute top-4 right-4 text-brand-muted hover:text-brand-charcoal p-2 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-brand-sage flex items-center justify-center text-brand-sageDark font-bold">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-base text-brand-charcoal">MiniMe Smart AI Assistant</h3>
+                    <p class="text-xs text-brand-muted">Ask anything in plain natural language!</p>
+                </div>
+            </div>
+
+            <!-- Pre-made Sample Prompts -->
+            <div class="space-y-1.5 pt-2">
+                <span class="text-[11px] font-bold text-brand-muted uppercase">Try clicking a sample prompt:</span>
+                <div class="flex flex-wrap gap-2 text-xs">
+                    <button onclick="runAiPrompt('Find soft cotton clothes for 6 month baby under 1000')" class="px-3 py-1 bg-brand-warmWhite hover:bg-brand-sand rounded-full text-brand-charcoal border border-brand-sand/60">"Soft cotton for 6 month baby under ₹1000"</button>
+                    <button onclick="runAiPrompt('Show breathable linen for age 22')" class="px-3 py-1 bg-brand-warmWhite hover:bg-brand-sand rounded-full text-brand-charcoal border border-brand-sand/60">"Breathable linen for age 22"</button>
+                    <button onclick="runAiPrompt('Comfortable easy wear for age 58')" class="px-3 py-1 bg-brand-warmWhite hover:bg-brand-sand rounded-full text-brand-charcoal border border-brand-sand/60">"Comfortable wear for age 58"</button>
+                    <button onclick="runAiPrompt('Gift set for newborn baby')" class="px-3 py-1 bg-brand-warmWhite hover:bg-brand-sand rounded-full text-brand-charcoal border border-brand-sand/60">"Gift set for a newborn baby"</button>
+                </div>
+            </div>
+
+            <!-- Input Box -->
+            <div class="flex gap-2">
+                <input type="text" id="aiInput" placeholder="e.g. Find muslin clothes for age 19 under ₹1500" class="flex-grow p-3 bg-brand-warmWhite border border-brand-sand rounded-2xl text-xs text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-brown">
+                <button onclick="processAiQuery()" class="px-5 py-3 bg-brand-brown hover:bg-brand-brownDark text-white text-xs font-semibold rounded-2xl transition-all shadow">
+                    Ask AI
+                </button>
+            </div>
+
+            <!-- AI Output Suggestions Container -->
+            <div id="aiResults" class="space-y-3 max-h-60 overflow-y-auto pt-2 border-t border-brand-sand/40">
+                <p class="text-xs text-brand-muted text-center py-4">Enter a prompt above to receive instant personalized garment recommendations.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCT DETAILS MODAL -->
+    <div id="productModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-3xl w-full p-6 shadow-2xl relative border border-brand-sand max-h-[90vh] overflow-y-auto">
+            <button onclick="toggleProductModal(false)" class="absolute top-4 right-4 text-brand-muted hover:text-brand-charcoal p-2 text-lg z-10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div id="productModalContent" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SHOPPING CART DRAWER -->
+    <div id="cartDrawer" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+        <!-- Drawer Header -->
+        <div class="p-4 border-b border-brand-sand flex items-center justify-between bg-brand-warmWhite">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bag-shopping text-brand-brown"></i>
+                <h3 class="font-bold text-sm text-brand-charcoal">Your Shopping Bag</h3>
+                <span id="cartItemCount" class="text-xs bg-brand-sand px-2 py-0.5 rounded-full font-bold">0</span>
+            </div>
+            <button onclick="toggleCartDrawer(false)" class="text-brand-muted hover:text-brand-charcoal p-1">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Drawer Cart Items Container -->
+        <div id="cartItemsContainer" class="flex-grow overflow-y-auto p-4 space-y-4">
+            <!-- Dynamically populated -->
+        </div>
+
+        <!-- Cart Footer & Checkout Action -->
+        <div class="p-4 border-t border-brand-sand/60 bg-brand-warmWhite space-y-3">
+            <!-- Promo Code Input -->
+            <div class="flex gap-2">
+                <input type="text" id="couponInput" placeholder="Promo code (e.g. MINI10)" class="flex-grow px-3 py-2 bg-white border border-brand-sand rounded-xl text-xs uppercase">
+                <button onclick="applyCoupon()" class="px-4 py-2 bg-brand-sand hover:bg-brand-brown hover:text-white text-xs font-bold rounded-xl transition-all">Apply</button>
+            </div>
+            <p id="couponMsg" class="text-[11px] text-emerald-600 hidden font-semibold"></p>
+
+            <!-- Price Breakdown -->
+            <div class="space-y-1 text-xs text-brand-muted pt-1">
+                <div class="flex justify-between">
+                    <span>Subtotal</span>
+                    <span id="cartSubtotal" class="font-semibold text-brand-charcoal">₹0</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Discount</span>
+                    <span id="cartDiscount" class="text-emerald-600 font-semibold">-₹0</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Estimated Shipping</span>
+                    <span id="cartShipping" class="font-semibold text-brand-charcoal">₹0</span>
+                </div>
+                <div class="flex justify-between text-sm font-bold text-brand-charcoal pt-2 border-t border-brand-sand">
+                    <span>Total Amount</span>
+                    <span id="cartTotal" class="text-brand-brown">₹0</span>
+                </div>
+            </div>
+
+            <button onclick="openCheckoutModal()" class="w-full py-3.5 bg-brand-brown hover:bg-brand-brownDark text-white font-bold text-xs rounded-2xl shadow-md transition-all flex items-center justify-center gap-2">
+                <span>Proceed to Checkout</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkoutModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl relative border border-brand-sand max-h-[90vh] overflow-y-auto">
+            <button onclick="toggleCheckoutModal(false)" class="absolute top-4 right-4 text-brand-muted hover:text-brand-charcoal p-2 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3 class="font-bold text-lg text-brand-charcoal mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-credit-card text-brand-brown"></i> Demo Checkout System
+            </h3>
+
+            <!-- Notice Banner -->
+            <div class="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-[11px] text-amber-800 mb-4">
+                <strong>Demo Notice:</strong> This is a sandbox demonstration checkout. No real money will be charged.
+            </div>
+
+            <form onsubmit="processOrder(event)" class="space-y-4 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="font-bold text-brand-charcoal block mb-1">Full Name *</label>
+                        <input type="text" id="custName" required placeholder="John Doe" class="w-full p-2.5 bg-brand-warmWhite border border-brand-sand rounded-xl">
+                    </div>
+                    <div>
+                        <label class="font-bold text-brand-charcoal block mb-1">Email Address *</label>
+                        <input type="email" id="custEmail" required placeholder="john@example.com" class="w-full p-2.5 bg-brand-warmWhite border border-brand-sand rounded-xl">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="font-bold text-brand-charcoal block mb-1">Phone Number *</label>
+                        <input type="tel" id="custPhone" required placeholder="+91 98765 43210" class="w-full p-2.5 bg-brand-warmWhite border border-brand-sand rounded-xl">
+                    </div>
+                    <div>
+                        <label class="font-bold text-brand-charcoal block mb-1">PIN Code *</label>
+                        <input type="text" id="custPin" required placeholder="360001" class="w-full p-2.5 bg-brand-warmWhite border border-brand-sand rounded-xl">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="font-bold text-brand-charcoal block mb-1">Shipping Address *</label>
+                    <textarea id="custAddress" required rows="2" placeholder="House no, street name, landmark..." class="w-full p-2.5 bg-brand-warmWhite border border-brand-sand rounded-xl"></textarea>
+                </div>
+
+                <!-- Payment Method Selection -->
+                <div>
+                    <label class="font-bold text-brand-charcoal block mb-2">Select Payment Method</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <label class="p-3 border border-brand-sand rounded-2xl flex flex-col items-center gap-1 cursor-pointer hover:bg-brand-warmWhite text-center">
+                            <input type="radio" name="paymentMethod" value="UPI" checked class="accent-brand-brown">
+                            <span class="font-bold text-brand-charcoal">UPI / QR</span>
+                            <span class="text-[10px] text-brand-muted">GPay, PhonePe</span>
+                        </label>
+                        <label class="p-3 border border-brand-sand rounded-2xl flex flex-col items-center gap-1 cursor-pointer hover:bg-brand-warmWhite text-center">
+                            <input type="radio" name="paymentMethod" value="COD" class="accent-brand-brown">
+                            <span class="font-bold text-brand-charcoal">Cash on Delivery</span>
+                            <span class="text-[10px] text-brand-muted">Pay on arrival</span>
+                        </label>
+                        <label class="p-3 border border-brand-sand rounded-2xl flex flex-col items-center gap-1 cursor-pointer hover:bg-brand-warmWhite text-center">
+                            <input type="radio" name="paymentMethod" value="Card" class="accent-brand-brown">
+                            <span class="font-bold text-brand-charcoal">Card</span>
+                            <span class="text-[10px] text-brand-muted">Debit/Credit Demo</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Final Order Summary -->
+                <div class="p-3 bg-brand-warmWhite rounded-2xl border border-brand-sand space-y-1">
+                    <div class="flex justify-between font-bold text-sm text-brand-charcoal">
+                        <span>Grand Total:</span>
+                        <span id="checkoutTotalAmount" class="text-brand-brown">₹0</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-brand-brown hover:bg-brand-brownDark text-white font-bold rounded-2xl shadow transition-all">
+                    Confirm & Place Order
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ORDER SUCCESS & PRINTABLE INVOICE MODAL -->
+    <div id="invoiceModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl relative border border-brand-sand max-h-[90vh] overflow-y-auto">
+            
+            <div id="printableInvoice" class="space-y-6">
+                <!-- Header -->
+                <div class="flex justify-between items-start border-b border-stone-200 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-brand-brown">MiniMe</h2>
+                        <p class="text-[11px] text-stone-500">Pure Organic Comfort Wear</p>
+                        <p class="text-[11px] text-stone-500">Rajkot, Gujarat, India</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold text-[10px]">ORDER CONFIRMED</span>
+                        <p id="invOrderId" class="font-mono text-xs font-bold text-stone-800 mt-2">#MINI-0000</p>
+                        <p id="invDate" class="text-[11px] text-stone-500"></p>
+                    </div>
+                </div>
+
+                <!-- Customer Details -->
+                <div class="grid grid-cols-2 gap-4 text-xs">
+                    <div>
+                        <p class="font-bold text-stone-700">Customer Info:</p>
+                        <p id="invCustName" class="text-stone-600 font-semibold"></p>
+                        <p id="invCustEmail" class="text-stone-500"></p>
+                        <p id="invCustPhone" class="text-stone-500"></p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-stone-700">Shipping Address:</p>
+                        <p id="invCustAddress" class="text-stone-600 whitespace-pre-line"></p>
+                    </div>
+                </div>
+
+                <!-- Items Table -->
+                <div>
+                    <p class="font-bold text-xs text-stone-700 mb-2">Order Items:</p>
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="border-b border-stone-200 text-stone-500">
+                                <th class="py-2">Garment</th>
+                                <th class="py-2">Size/Color</th>
+                                <th class="py-2">Qty</th>
+                                <th class="py-2 text-right">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invItemsTable">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Price Summary -->
+                <div class="border-t border-stone-200 pt-3 text-xs space-y-1">
+                    <div class="flex justify-between text-stone-600">
+                        <span>Subtotal:</span>
+                        <span id="invSubtotal"></span>
+                    </div>
+                    <div class="flex justify-between text-stone-600">
+                        <span>Discount:</span>
+                        <span id="invDiscount"></span>
+                    </div>
+                    <div class="flex justify-between font-bold text-stone-800 text-sm pt-1 border-t border-stone-100">
+                        <span>Paid Total:</span>
+                        <span id="invTotal" class="text-brand-brown"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 flex gap-3 no-print">
+                <button onclick="window.print()" class="flex-1 py-3 bg-brand-sand hover:bg-brand-brown hover:text-white font-bold text-xs rounded-2xl transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-print"></i> Print Invoice
+                </button>
+                <button onclick="closeInvoiceModal()" class="flex-1 py-3 bg-brand-brown hover:bg-brand-brownDark text-white font-bold text-xs rounded-2xl transition-all">
+                    Continue Shopping
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- WISHLIST MODAL -->
+    <div id="wishlistModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl relative border border-brand-sand max-h-[80vh] overflow-y-auto">
+            <button onclick="toggleWishlistModal(false)" class="absolute top-4 right-4 text-brand-muted hover:text-brand-charcoal p-2 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3 class="font-bold text-base text-brand-charcoal mb-4 flex items-center gap-2">
+                <i class="fa-regular fa-heart text-brand-brown"></i> Saved Favorites
+            </h3>
+
+            <div id="wishlistContainer" class="space-y-3">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. PRODUCT CATALOG DATA (Includes Babies, Age 19, Age 22, and Age 58+) ---
+        const products = [
+            {
+                id: 1,
+                name: "Organic Muslin Cloud Romper",
+                category: "romper",
+                ageGroup: "0-3m",
+                ageLabel: "Baby (0-3M)",
+                material: "Muslin",
+                price: 799,
+                rating: 4.9,
+                colors: ["#F8ECEE", "#E3EAE3", "#E6DFD5"],
+                sizes: ["0-3M", "3-6M", "6-12M"],
+                image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80",
+                description: "Ultra-soft double gauze muslin romper designed with nickel-free snaps for effortless diaper changes. Non-irritating flat seams.",
+                care: "Machine wash cold with mild detergent. Tumble dry on low or air dry in shade."
+            },
+            {
+                id: 2,
+                name: "Bamboo Soft Pajama Set",
+                category: "pajama",
+                ageGroup: "3-12m",
+                ageLabel: "Baby (3-12M)",
+                material: "Bamboo Viscose",
+                price: 1199,
+                rating: 4.8,
+                colors: ["#E3EAE3", "#FAF8F5"],
+                sizes: ["3-6M", "6-12M", "1-2Y"],
+                image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=600&q=80",
+                description: "Thermoregulating bamboo pajama set that keeps little ones cozy during winter nights and cool on warm days.",
+                care: "Wash cold, lay flat to dry to preserve stretchy fiber bounce."
+            },
+            {
+                id: 3,
+                name: "Toddler Linen Overall Set",
+                category: "sets",
+                ageGroup: "1-3y",
+                ageLabel: "Toddler (1-3Y)",
+                material: "Linen",
+                price: 1499,
+                rating: 4.7,
+                colors: ["#E6DFD5", "#8C6D58"],
+                sizes: ["1-2Y", "2-3Y"],
+                image: "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=600&q=80",
+                description: "Pre-washed breathable linen dungarees paired with a soft organic cotton inner tee. Durable for active play.",
+                care: "Warm wash with soft spin. Cool iron on reverse side."
+            },
+            {
+                id: 4,
+                name: "Youth Relaxed Muslin Shirt",
+                category: "tops",
+                ageGroup: "19",
+                ageLabel: "Youth (Age 19)",
+                material: "Muslin",
+                price: 1299,
+                rating: 4.9,
+                colors: ["#FAF8F5", "#5B705B", "#E6DFD5"],
+                sizes: ["S", "M", "L"],
+                image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
+                description: "Minimalist breathable muslin button-down tailored for university students & young adults. Lightweight drape.",
+                care: "Machine wash cold. Do not dry clean."
+            },
+            {
+                id: 5,
+                name: "Age 22 Minimalist Organic Tee",
+                category: "tops",
+                ageGroup: "22",
+                ageLabel: "Adult (Age 22)",
+                material: "Organic Cotton",
+                price: 899,
+                rating: 4.8,
+                colors: ["#2C2A29", "#E3EAE3", "#FAF8F5"],
+                sizes: ["M", "L", "XL"],
+                image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80",
+                description: "Heavyweight 220 GSM organic combed cotton t-shirt with a relaxed drop-shoulder cut.",
+                care: "Gentle cycle. Wash inside out with like colors."
+            },
+            {
+                id: 6,
+                name: "Senior Gentle Touch Linen Co-ord",
+                category: "sets",
+                ageGroup: "58",
+                ageLabel: "Senior (Age 58+)",
+                material: "Linen",
+                price: 2499,
+                rating: 5.0,
+                colors: ["#E6DFD5", "#5B705B"],
+                sizes: ["L", "XL", "Comfort Fit"],
+                image: "https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=600&q=80",
+                description: "Loose elastic waistband trousers and a soft open-collar linen tunic for effortless senior mobility and ease.",
+                care: "Hand wash or gentle cycle. Line dry in shade."
+            },
+            {
+                id: 7,
+                name: "Bamboo Comfort Lounge Robe",
+                category: "pajama",
+                ageGroup: "58",
+                ageLabel: "Senior (Age 58+)",
+                material: "Bamboo Viscose",
+                price: 2199,
+                rating: 4.9,
+                colors: ["#FAF8F5", "#E3EAE3"],
+                sizes: ["Universal Comfort"],
+                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80",
+                description: "Feather-light bamboo viscose robe designed for senior relaxation at home with deep side pockets.",
+                care: "Cold delicate wash, no bleach."
+            },
+            {
+                id: 8,
+                name: "College Casual Muslin Shorts Set",
+                category: "sets",
+                ageGroup: "19",
+                ageLabel: "Youth (Age 19)",
+                material: "Muslin",
+                price: 1599,
+                rating: 4.6,
+                colors: ["#8C6D58", "#E3EAE3"],
+                sizes: ["S", "M", "L"],
+                image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80",
+                description: "Cozy 2-piece summer loungewear set crafted from crinkled double muslin fabric.",
+                care: "Delicate machine wash. Fast drying."
+            },
+            {
+                id: 9,
+                name: "Organic Newborn Swaddle Blanket",
+                category: "blanket",
+                ageGroup: "0-3m",
+                ageLabel: "Newborn (0-3M)",
+                material: "Organic Cotton",
+                price: 599,
+                rating: 4.9,
+                colors: ["#F8ECEE", "#E3EAE3"],
+                sizes: ["Free Size (120x120cm)"],
+                image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=600&q=80",
+                description: "Generously sized breathable organic cotton wrap that mimics motherly warmth safely.",
+                care: "Warm gentle wash before first use."
+            },
+            {
+                id: 10,
+                name: "Soft Cotton Ribbed Bodysuit 3-Pack",
+                category: "romper",
+                ageGroup: "3-12m",
+                ageLabel: "Baby (3-12M)",
+                material: "Cotton Blend",
+                price: 999,
+                rating: 4.8,
+                colors: ["#FAF8F5", "#E6DFD5"],
+                sizes: ["3-6M", "6-12M"],
+                image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80",
+                description: "Expandable shoulder design with flexible cotton ribbing for daily nursery wear.",
+                care: "Standard machine wash."
+            },
+            {
+                id: 11,
+                name: "Age 22 Daily Linen Trousers",
+                category: "sets",
+                ageGroup: "22",
+                ageLabel: "Adult (Age 22)",
+                material: "Linen",
+                price: 1899,
+                rating: 4.7,
+                colors: ["#E6DFD5", "#2C2A29"],
+                sizes: ["M", "L", "XL"],
+                image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&q=80",
+                description: "Contemporary straight-leg linen trousers featuring a drawstring waist and minimalist tailored seams.",
+                care: "Dry flat. Do not wring."
+            },
+            {
+                id: 12,
+                name: "Soft Cotton Knit Cardigan",
+                category: "tops",
+                ageGroup: "1-3y",
+                ageLabel: "Toddler (1-3Y)",
+                material: "Cotton Blend",
+                price: 1299,
+                rating: 4.8,
+                colors: ["#8C6D58", "#E3EAE3"],
+                sizes: ["1-2Y", "2-3Y"],
+                image: "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=600&q=80",
+                description: "Wooden button cotton knit cardigan for gentle layering on breezy evenings.",
+                care: "Wash with gentle knit cycle."
+            }
+        ];
+
+        // --- 2. GLOBAL STATE ---
+        let cart = JSON.parse(localStorage.getItem('minime_cart')) || [];
+        let wishlist = JSON.parse(localStorage.getItem('minime_wishlist')) || [];
+        let appliedDiscount = 0;
+
+        // --- 3. INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            renderProducts(products);
+            updateCartBadge();
+            updateWishlistBadge();
+
+            // Setup Mobile Toggle Listener
+            document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+        });
+
+        // --- 4. PRODUCT RENDER LOGIC ---
+        function renderProducts(items) {
+            const grid = document.getElementById('productGrid');
+            const emptyState = document.getElementById('emptyState');
+            const countLabel = document.getElementById('productCount');
+
+            grid.innerHTML = '';
+            countLabel.innerText = `Showing ${items.length} products`;
+
+            if (items.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            grid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            items.forEach(product => {
+                const isWishlisted = wishlist.includes(product.id);
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-3xl p-4 border border-brand-sand/60 product-card flex flex-col justify-between shadow-sm";
+                
+                card.innerHTML = `
+                    <div>
+                        <!-- Image Container with Wishlist Badge -->
+                        <div class="relative overflow-hidden rounded-2xl mb-3 bg-brand-warmWhite group cursor-pointer" onclick="openProductModal(${product.id})">
+                            <img src="${product.image}" alt="${product.name}" class="w-full h-52 object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500">
+                            
+                            <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-brand-charcoal text-[10px] font-bold px-2.5 py-1 rounded-full border border-brand-sand/40">
+                                ${product.ageLabel}
+                            </span>
+
+                            <button onclick="event.stopPropagation(); toggleWishlist(${product.id})" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-xs shadow-sm hover:scale-110 transition-transform">
+                                <i class="${isWishlisted ? 'fa-solid text-red-500' : 'fa-regular text-brand-charcoal'} fa-heart"></i>
+                            </button>
+                        </div>
+
+                        <!-- Info -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-center text-[11px] text-brand-muted">
+                                <span>🌿 ${product.material}</span>
+                                <span class="text-amber-500 font-bold">★ ${product.rating}</span>
+                            </div>
+                            <h3 onclick="openProductModal(${product.id})" class="font-bold text-sm text-brand-charcoal hover:text-brand-brown cursor-pointer line-clamp-1">${product.name}</h3>
+                        </div>
+                    </div>
+
+                    <!-- Price & Add Button -->
+                    <div class="pt-4 border-t border-brand-sand/40 mt-3 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-brand-muted block text-[10px]">Price</span>
+                            <span class="font-bold text-sm text-brand-brown">₹${product.price}</span>
+                        </div>
+                        <button onclick="addToCart(${product.id}, '${product.sizes[0]}')" class="px-3.5 py-2 bg-brand-beige hover:bg-brand-brown hover:text-white text-brand-charcoal text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus text-[10px]"></i> Add
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- 5. FILTERING & SEARCH SYSTEM ---
+        function applyFilters() {
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            const catVal = document.getElementById('categoryFilter').value;
+            const ageVal = document.getElementById('ageFilter').value;
+            const matVal = document.getElementById('materialFilter').value;
+            const maxPrice = parseFloat(document.getElementById('priceFilter').value);
+            const sortVal = document.getElementById('sortOrder').value;
+
+            document.getElementById('priceDisplay').innerText = `₹${maxPrice}`;
+
+            let filtered = products.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(searchVal) || p.material.toLowerCase().includes(searchVal);
+                const matchesCat = catVal === 'all' || p.category === catVal;
+                const matchesAge = ageVal === 'all' || p.ageGroup === ageVal;
+                const matchesMat = matVal === 'all' || p.material === matVal;
+                const matchesPrice = p.price <= maxPrice;
+
+                return matchesSearch && matchesCat && matchesAge && matchesMat && matchesPrice;
+            });
+
+            // Sorting
+            if (sortVal === 'price-low') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (sortVal === 'price-high') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else if (sortVal === 'rating') {
+                filtered.sort((a, b) => b.rating - a.rating);
+            }
+
+            renderProducts(filtered);
+        }
+
+        function filterByAge(age) {
+            document.getElementById('ageFilter').value = age;
+            applyFilters();
+            document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = 'all';
+            document.getElementById('ageFilter').value = 'all';
+            document.getElementById('materialFilter').value = 'all';
+            document.getElementById('priceFilter').value = 3500;
+            document.getElementById('sortOrder').value = 'featured';
+            applyFilters();
+        }
+
+        function focusSearch() {
+            document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => document.getElementById('searchInput').focus(), 400);
+        }
+
+        // --- 6. AI-POWERED ASSISTANT LOGIC (Rule-based NLP parser) ---
+        function toggleAiModal(show) {
+            const modal = document.getElementById('aiModal');
+            if (show) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
+        }
+
+        function runAiPrompt(text) {
+            document.getElementById('aiInput').value = text;
+            processAiQuery();
+        }
+
+        function processAiQuery() {
+            const input = document.getElementById('aiInput').value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('aiResults');
+
+            if (!input) return;
+
+            // Simple parser rules
+            let matchedProducts = products.filter(p => {
+                let score = 0;
+                
+                // Age rules
+                if ((input.includes('baby') || input.includes('6 month') || input.includes('newborn')) && (p.ageGroup === '0-3m' || p.ageGroup === '3-12m')) score += 2;
+                if (input.includes('19') && p.ageGroup === '19') score += 3;
+                if (input.includes('22') && p.ageGroup === '22') score += 3;
+                if ((input.includes('58') || input.includes('senior') || input.includes('elder')) && p.ageGroup === '58') score += 3;
+
+                // Material rules
+                if (input.includes('muslin') && p.material === 'Muslin') score += 2;
+                if (input.includes('cotton') && p.material.includes('Cotton')) score += 2;
+                if (input.includes('linen') && p.material === 'Linen') score += 2;
+                if (input.includes('bamboo') && p.material.includes('Bamboo')) score += 2;
+
+                // Price rules
+                if (input.includes('under 1000') || input.includes('under ₹1000')) {
+                    if (p.price <= 1000) score += 2;
+                }
+                if (input.includes('under 800') || input.includes('under ₹800')) {
+                    if (p.price <= 800) score += 2;
+                }
+
+                // General keywords
+                if (input.includes('gift') || input.includes('set')) {
+                    if (p.category === 'sets' || p.category === 'blanket') score += 1;
+                }
+
+                return score > 0;
+            });
+
+            // Fallback if no specific match
+            if (matchedProducts.length === 0) {
+                matchedProducts = products.slice(0, 3);
+            }
+
+            resultsContainer.innerHTML = matchedProducts.slice(0, 3).map(p => `
+                <div class="flex items-center gap-3 p-2 bg-brand-warmWhite rounded-2xl border border-brand-sand/50">
+                    <img src="${p.image}" class="w-12 h-12 rounded-xl object-cover">
+                    <div class="flex-grow">
+                        <p class="font-bold text-xs text-brand-charcoal">${p.name}</p>
+                        <p class="text-[10px] text-brand-muted">${p.ageLabel} • ${p.material} • ₹${p.price}</p>
+                    </div>
+                    <button onclick="addToCart(${p.id}, '${p.sizes[0]}'); toggleAiModal(false);" class="px-3 py-1.5 bg-brand-brown text-white text-[11px] font-bold rounded-xl hover:bg-brand-brownDark transition-colors">
+                        Add
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // --- 7. PRODUCT DETAIL MODAL ---
+        function openProductModal(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            const modalContent = document.getElementById('productModalContent');
+            modalContent.innerHTML = `
+                <div>
+                    <img src="${product.image}" class="w-full h-80 object-cover rounded-2xl border border-brand-sand/40">
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-brand-brown px-2 py-0.5 bg-brand-pink rounded-md">${product.ageLabel}</span>
+                        <h2 class="text-xl font-bold text-brand-charcoal mt-1">${product.name}</h2>
+                        <div class="text-lg font-bold text-brand-brown mt-1">₹${product.price}</div>
+                    </div>
+
+                    <p class="text-xs text-brand-muted leading-relaxed">${product.description}</p>
+
+                    <div class="space-y-1 bg-brand-warmWhite p-3 rounded-2xl border border-brand-sand/50 text-[11px]">
+                        <p class="font-bold text-brand-charcoal">🧼 Fabric Care Instructions:</p>
+                        <p class="text-brand-muted">${product.care}</p>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-brand-charcoal block mb-1">Select Size</label>
+                        <div class="flex gap-2">
+                            ${product.sizes.map((s, idx) => `
+                                <button onclick="selectModalSize(this)" class="size-btn px-3 py-1.5 border ${idx===0?'border-brand-brown bg-brand-brown text-white':'border-brand-sand text-brand-charcoal'} text-xs font-bold rounded-xl">${s}</button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="pt-2 flex gap-3">
+                        <button onclick="addModalItemToCart(${product.id})" class="flex-grow py-3 bg-brand-brown hover:bg-brand-brownDark text-white font-bold text-xs rounded-2xl shadow transition-all">
+                            Add to Shopping Cart
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('productModal').classList.remove('hidden');
+        }
+
+        function selectModalSize(btn) {
+            document.querySelectorAll('.size-btn').forEach(b => {
+                b.classList.remove('border-brand-brown', 'bg-brand-brown', 'text-white');
+                b.classList.add('border-brand-sand', 'text-brand-charcoal');
+            });
+            btn.classList.add('border-brand-brown', 'bg-brand-brown', 'text-white');
+        }
+
+        function addModalItemToCart(id) {
+            const selectedSizeBtn = document.querySelector('.size-btn.bg-brand-brown');
+            const size = selectedSizeBtn ? selectedSizeBtn.innerText : 'Standard';
+            addToCart(id, size);
+            toggleProductModal(false);
+        }
+
+        function toggleProductModal(show) {
+            const modal = document.getElementById('productModal');
+            if (show) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
+        }
+
+        // --- 8. SHOPPING CART LOGIC ---
+        function addToCart(productId, size) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existingIndex = cart.findIndex(item => item.id === productId && item.selectedSize === size);
+
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    selectedSize: size,
+                    qty: 1
+                });
+            }
+
+            saveCart();
+            updateCartDrawer();
+            showToast(`Added "${product.name}" to cart!`);
+        }
+
+        function updateCartQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            saveCart();
+            updateCartDrawer();
+        }
+
+        function saveCart() {
+            localStorage.setItem('minime_cart', JSON.stringify(cart));
+            updateCartBadge();
+        }
+
+        function updateCartBadge() {
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cartBadge').innerText = totalItems;
+            document.getElementById('cartItemCount').innerText = totalItems;
+        }
+
+        function updateCartDrawer() {
+            const container = document.getElementById('cartItemsContainer');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 space-y-3">
+                        <div class="text-3xl text-brand-sand">🛍️</div>
+                        <p class="text-xs font-bold text-brand-charcoal">Your cart is currently empty.</p>
+                        <p class="text-[11px] text-brand-muted">Discover soft organic garments from our catalog.</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = cart.map((item, index) => `
+                    <div class="flex items-center gap-3 p-3 bg-brand-warmWhite rounded-2xl border border-brand-sand/50">
+                        <img src="${item.image}" class="w-14 h-14 object-cover rounded-xl">
+                        <div class="flex-grow">
+                            <h4 class="font-bold text-xs text-brand-charcoal">${item.name}</h4>
+                            <p class="text-[10px] text-brand-muted">Size: ${item.selectedSize}</p>
+                            <span class="font-bold text-xs text-brand-brown">₹${item.price}</span>
+                        </div>
+                        <div class="flex items-center gap-2 border border-brand-sand rounded-xl bg-white px-2 py-1">
+                            <button onclick="updateCartQty(${index}, -1)" class="text-xs font-bold text-brand-muted px-1">-</button>
+                            <span class="text-xs font-bold">${item.qty}</span>
+                            <button onclick="updateCartQty(${index}, 1)" class="text-xs font-bold text-brand-muted px-1">+</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Price Calculations
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const discountAmt = Math.round(subtotal * appliedDiscount);
+            const shipping = (subtotal > 999 || subtotal === 0) ? 0 : 99;
+            const grandTotal = Math.max(0, subtotal - discountAmt + shipping);
+
+            document.getElementById('cartSubtotal').innerText = `₹${subtotal}`;
+            document.getElementById('cartDiscount').innerText = `-₹${discountAmt}`;
+            document.getElementById('cartShipping').innerText = shipping === 0 ? 'FREE' : `₹${shipping}`;
+            document.getElementById('cartTotal').innerText = `₹${grandTotal}`;
+            document.getElementById('checkoutTotalAmount').innerText = `₹${grandTotal}`;
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('couponInput').value.trim().toUpperCase();
+            const msg = document.getElementById('couponMsg');
+
+            if (code === 'MINI10') {
+                appliedDiscount = 0.10;
+                msg.innerText = "✨ Promo code 'MINI10' applied (10% OFF)!";
+                msg.classList.remove('hidden');
+                showToast("10% discount code applied!");
+            } else {
+                appliedDiscount = 0;
+                msg.innerText = "Invalid code. Try 'MINI10'.";
+                msg.classList.remove('hidden');
+                msg.classList.add('text-red-500');
+            }
+            updateCartDrawer();
+        }
+
+        function toggleCartDrawer(show) {
+            const drawer = document.getElementById('cartDrawer');
+            if (show) {
+                updateCartDrawer();
+                drawer.classList.remove('translate-x-full');
+            } else {
+                drawer.classList.add('translate-x-full');
+            }
+        }
+
+        // --- 9. CHECKOUT & DEMO INVOICE GENERATION ---
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                showToast("Your cart is empty!");
+                return;
+            }
+            toggleCartDrawer(false);
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function toggleCheckoutModal(show) {
+            const modal = document.getElementById('checkoutModal');
+            if (show) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
+        }
+
+        function processOrder(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('custName').value;
+            const email = document.getElementById('custEmail').value;
+            const phone = document.getElementById('custPhone').value;
+            const pin = document.getElementById('custPin').value;
+            const address = document.getElementById('custAddress').value;
+
+            const orderId = `#MINI-${Math.floor(10000 + Math.random() * 90000)}`;
+            const dateStr = new Date().toLocaleDateString('en-IN', { dateStyle: 'medium' });
+
+            // Populate Invoice
+            document.getElementById('invOrderId').innerText = orderId;
+            document.getElementById('invDate').innerText = dateStr;
+            document.getElementById('invCustName').innerText = name;
+            document.getElementById('invCustEmail').innerText = email;
+            document.getElementById('invCustPhone').innerText = phone;
+            document.getElementById('invCustAddress').innerText = `${address}, PIN: ${pin}`;
+
+            // Invoice Table
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const discountAmt = Math.round(subtotal * appliedDiscount);
+            const total = Math.max(0, subtotal - discountAmt);
+
+            document.getElementById('invItemsTable').innerHTML = cart.map(item => `
+                <tr class="border-b border-stone-100">
+                    <td class="py-2 font-medium text-stone-800">${item.name}</td>
+                    <td class="py-2 text-stone-500">${item.selectedSize}</td>
+                    <td class="py-2 text-stone-500">${item.qty}</td>
+                    <td class="py-2 text-right font-semibold text-stone-800">₹${item.price * item.qty}</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('invSubtotal').innerText = `₹${subtotal}`;
+            document.getElementById('invDiscount').innerText = `-₹${discountAmt}`;
+            document.getElementById('invTotal').innerText = `₹${total}`;
+
+            // Reset Cart
+            cart = [];
+            saveCart();
+
+            toggleCheckoutModal(false);
+            document.getElementById('invoiceModal').classList.remove('hidden');
+            showToast("Order placed successfully!");
+        }
+
+        function closeInvoiceModal() {
+            document.getElementById('invoiceModal').classList.add('hidden');
+        }
+
+        // --- 10. WISHLIST SYSTEM ---
+        function toggleWishlist(id) {
+            const index = wishlist.indexOf(id);
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                showToast("Item removed from Wishlist");
+            } else {
+                wishlist.push(id);
+                showToast("Item saved to Wishlist ❤️");
+            }
+            localStorage.setItem('minime_wishlist', JSON.stringify(wishlist));
+            updateWishlistBadge();
+            applyFilters();
+        }
+
+        function updateWishlistBadge() {
+            const badge = document.getElementById('wishlistBadge');
+            badge.innerText = wishlist.length;
+            if (wishlist.length > 0) badge.classList.remove('hidden');
+            else badge.classList.add('hidden');
+        }
+
+        function toggleWishlistModal(show) {
+            const modal = document.getElementById('wishlistModal');
+            if (show) {
+                renderWishlistModal();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function renderWishlistModal() {
+            const container = document.getElementById('wishlistContainer');
+            const items = products.filter(p => wishlist.includes(p.id));
+
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-xs text-brand-muted">
+                        No saved items in your wishlist yet.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = items.map(p => `
+                <div class="flex items-center gap-3 p-3 bg-brand-warmWhite rounded-2xl border border-brand-sand/50">
+                    <img src="${p.image}" class="w-12 h-12 rounded-xl object-cover">
+                    <div class="flex-grow">
+                        <p class="font-bold text-xs text-brand-charcoal">${p.name}</p>
+                        <p class="text-[10px] text-brand-muted">₹${p.price}</p>
+                    </div>
+                    <button onclick="addToCart(${p.id}, '${p.sizes[0]}'); toggleWishlistModal(false);" class="px-3 py-1.5 bg-brand-brown text-white text-xs font-bold rounded-xl">
+                        Move to Cart
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // --- 11. TOAST SYSTEM & UTILS ---
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = "bg-brand-charcoal text-white text-xs font-medium px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 transition-all duration-300 transform translate-y-2 pointer-events-auto";
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> ${message}`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function subscribeNewsletter(e) {
+            e.preventDefault();
+            showToast("Thank you for subscribing to MiniMe Club!");
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>
